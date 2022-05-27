@@ -22,10 +22,25 @@ const server = http.createServer((req, res) => {
         return res.end();    
     }
     if(url === '/message' && req.method === 'POST'){
-        fs.writeFileSync('message.text', 'DUMMY TEXT');
-        res.statusCode = 302;
-        res.setHeader('Location', '/');
-        return res.end();
+        
+        //This method is always fired whenever there are chunks of data is ready to be read('data' is an event, similir to onClick)
+        //The function is always executed for every data event
+        const body = []
+        req.on('data', (chunk) => {
+            console.log(chunk)
+            body.push(chunk);
+        });
+        return req.on('end', () => {
+            const parsedBody = Buffer.concat(body).toString();
+            const message = parsedBody.split('=')[1];
+            //Sync stands for synchronous -> It means that Sync function blocks the code execution until the operation performed by sync function is completed.
+            //We will receive null in err if no error is occured
+            fs.writeFile('message.text', message, (err) => {
+                res.statusCode = 302;
+                res.setHeader('Location', '/');
+                return res.end();
+            });
+        });
     }
     res.setHeader('Content-Type', 'text/html');
     res.write
