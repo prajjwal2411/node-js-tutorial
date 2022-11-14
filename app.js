@@ -5,9 +5,16 @@ const expressHbs = require('express-handlebars');
 
 const app = express();
 
-app.engine('hbs', expressHbs());
+// Additional Code for handlebars
+// app.engine('hbs', expressHbs({
+//     layoutsDir: 'views/layouts/', 
+//     defaultLayout: 'main-layout', 
+//     extname: 'hbs'
+// }));
 // This allows us to set any values globally on our express application
-app.set('view engine', 'hbs');
+//app.set('view engine', 'hbs'); //For Handlebars
+//app.set('view engine', 'pug'); //For pug
+app.set('view engine', 'ejs'); //For ejs
 app.set('views', 'views');
 
 const adminData = require('./routes/admin');
